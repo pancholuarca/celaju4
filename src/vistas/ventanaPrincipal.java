@@ -146,15 +146,21 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     System.out.println("tipo de usuario "+rs.getString(4));
                     if("1".equals(rs.getString(4))){
                         System.out.println("usuario es gerente");
+                        ventanaGerente test = new ventanaGerente();
+                        test.setVisible(true);
+                        System.out.println("se tuvo que mostrar la ventana");
                     }
                     if("2".equals(rs.getString(4))){
                         System.out.println("usuario es vendedor");
+                        ventanaVendedor vendedor = new ventanaVendedor();
+                        vendedor.setVisible(true);
                     }
                  }else{
                      JOptionPane.showMessageDialog(null,"Datos Incorrectos") ;
                 }
             } catch (SQLException ex) {
             System.out.println("Error al conectar a la base de datos"); }
+            //this.dispose();
             
             
           }
