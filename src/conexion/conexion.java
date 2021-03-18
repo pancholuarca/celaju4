@@ -34,6 +34,8 @@ public class conexion {
         ResultSet rs = ps.executeQuery();
         if(rs.next()==true){
            JOptionPane.showMessageDialog(null,"Bienvenido") ;
+            System.out.println("el usuario es "+rs.getString(2));
+           
         }else{
             JOptionPane.showMessageDialog(null,"Datos Incorrectos") ;
         }
