@@ -2,7 +2,10 @@
 package vistas;
 
 import conexion.conexion;
+import static conexion.conexion.con;
 import static java.awt.image.ImageObserver.HEIGHT;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -132,11 +135,29 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         else{
             try {
                 //llamo procedimiento de inicio de sesión
-                cn.iniciosesion(usuario,contraseña);
+                //cn.iniciosesion(usuario,contraseña);
+                PreparedStatement ps = con.prepareStatement("select * from usuario where Nombre =? and Contraseña=?");
+                ps.setString(1,usuario);
+                ps.setString(2,contraseña);
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()==true){
+                    JOptionPane.showMessageDialog(null,"Bienvenido") ;
+                    System.out.println("el usuario es "+rs.getString(2));
+                    System.out.println("tipo de usuario "+rs.getString(4));
+                    if("1".equals(rs.getString(4))){
+                        System.out.println("usuario es gerente");
+                    }
+                    if("2".equals(rs.getString(4))){
+                        System.out.println("usuario es vendedor");
+                    }
+                 }else{
+                     JOptionPane.showMessageDialog(null,"Datos Incorrectos") ;
+                }
             } catch (SQLException ex) {
             System.out.println("Error al conectar a la base de datos"); }
             
-        }
+            
+          }
     }//GEN-LAST:event_jButton1ActionPerformed
 
   
