@@ -28,8 +28,8 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         txtnombre = new javax.swing.JTextField();
         txtcontraseña = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btingresar = new javax.swing.JButton();
+        btsalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Celaju Login");
@@ -48,19 +48,19 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel4.setText("Ingresa tus datos para continuar");
 
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton1.setText("Ingresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btingresar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btingresar.setText("Ingresar");
+        btingresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btingresarActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton2.setText("Salir");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btsalir.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btsalir.setText("Salir");
+        btsalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btsalirActionPerformed(evt);
             }
         });
 
@@ -90,9 +90,9 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(56, 56, 56))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btingresar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btsalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(81, 81, 81))))
         );
         layout.setVerticalGroup(
@@ -112,8 +112,8 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     .addComponent(txtcontraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btingresar)
+                    .addComponent(btsalir))
                 .addContainerGap(87, Short.MAX_VALUE))
         );
 
@@ -121,11 +121,11 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btsalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsalirActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btsalirActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btingresarActionPerformed
         String usuario=txtnombre.getText();
         String contraseña=txtcontraseña.getText();
         cn.conectar();
@@ -134,37 +134,12 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         }
         else{
             try {
-                //llamo procedimiento de inicio de sesión
-                //cn.iniciosesion(usuario,contraseña);
-                PreparedStatement ps = con.prepareStatement("select * from usuario where Nombre =? and Contraseña=?");
-                ps.setString(1,usuario);
-                ps.setString(2,contraseña);
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()==true){
-                    JOptionPane.showMessageDialog(null,"Bienvenido") ;
-                    System.out.println("el usuario es "+rs.getString(2));
-                    System.out.println("tipo de usuario "+rs.getString(4));
-                    if("1".equals(rs.getString(4))){
-                        System.out.println("usuario es gerente");
-                        ventanaGerente test = new ventanaGerente();
-                        test.setVisible(true);
-                        System.out.println("se tuvo que mostrar la ventana");
-                    }
-                    if("2".equals(rs.getString(4))){
-                        System.out.println("usuario es vendedor");
-                        ventanaVendedor vendedor = new ventanaVendedor();
-                        vendedor.setVisible(true);
-                    }
-                 }else{
-                     JOptionPane.showMessageDialog(null,"Datos Incorrectos") ;
-                }
+                cn.iniciosesion(usuario,contraseña);
             } catch (SQLException ex) {
             System.out.println("Error al conectar a la base de datos"); }
-            //this.dispose();
-            
-            
-          }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        }
+        
+    }//GEN-LAST:event_btingresarActionPerformed
 
   
     public static void main(String args[]) {
@@ -200,8 +175,8 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btingresar;
+    private javax.swing.JButton btsalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
