@@ -7,8 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import vistas.ventanaGerente;
+
 import vistas.ventanaVendedor;
+import vistas.ventanaGerente;
 
 public class conexion {
 public static Connection con;
@@ -64,17 +65,25 @@ public void conectar(){
         System.out.println("cliente agregado");        
     }
     
-     public void ingresarproducto(String clave, String descripcion, String linea, int existencia, double precio, int bodega ) throws SQLException{
-        PreparedStatement ps = con.prepareStatement("INSERT INTO producto(clave, descripcion, linea, existencia, precio, bodega) VALUES(?,?,?,?,?)");
-        ps.setString(1, clave);
-        ps.setString(2, descripcion);
-        ps.setString(3, linea);
-        ps.setInt(4, existencia);
-        ps.setDouble(5, precio);
-        ps.setInt(6, bodega);
-        ps.executeUpdate();
+     public void ingresarproducto(String Clave, String Descripcion, String Linea, int Existencia, int Precio, int Bodega_idBodega ) throws SQLException{
+        PreparedStatement ps1 = con.prepareStatement("INSERT INTO producto(Clave, Descripcion, Linea, Existencia, Precio, Bodega_idBodega) VALUES(?,?,?,?,?,?)");
+        ps1.setString(1, Clave);
+        ps1.setString(2, Descripcion);
+        ps1.setString(3, Linea);
+        ps1.setInt(4, Existencia);
+        ps1.setInt(5, Precio);
+        ps1.setInt(6, Bodega_idBodega);
+        ps1.executeUpdate();
         System.out.println("Producto Agregado");        
     }
+     
+     public void eliminarproducto(String Clave) throws SQLException{
+         PreparedStatement ps = con.prepareStatement("DELETE  FROM producto WHERE Clave=?");
+         ps.setString(1, Clave);
+         ps.executeUpdate();
+         System.out.println("Producto Eliminado");
+         
+     }
     
     public void cargartabla(){
         DefaultTableModel modelo = new DefaultTableModel();
