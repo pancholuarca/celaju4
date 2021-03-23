@@ -6,15 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import vistas.ventanaGerente;
 import vistas.ventanaVendedor;
-import vistas.ventanaPrincipal;
 
 public class conexion {
-    public static Connection con;
-      
-    
-    public void conectar(){ 
+public static Connection con;
+
+public void conectar(){ 
         try {
             con=DriverManager.getConnection("jdbc:mysql://localhost:3306/testcelaju","root","root1234");
             if (con!=null){
@@ -64,6 +63,27 @@ public class conexion {
         ps.executeUpdate();
         System.out.println("cliente agregado");        
     }
+    
+     public void ingresarproducto(String clave, String descripcion, String linea, int existencia, double precio, int bodega ) throws SQLException{
+        PreparedStatement ps = con.prepareStatement("INSERT INTO producto(clave, descripcion, linea, existencia, precio, bodega) VALUES(?,?,?,?,?)");
+        ps.setString(1, clave);
+        ps.setString(2, descripcion);
+        ps.setString(3, linea);
+        ps.setInt(4, existencia);
+        ps.setDouble(5, precio);
+        ps.setInt(6, bodega);
+        ps.executeUpdate();
+        System.out.println("Producto Agregado");        
+    }
+    
+    public void cargartabla(){
+        DefaultTableModel modelo = new DefaultTableModel();
+        String [] titulo = {"Clave","Nombre","Nit","Dirección","Tipo de Cliente"};
+        modelo.addColumn("prueba");
+        
+         
+    }
+    
     
     
     
