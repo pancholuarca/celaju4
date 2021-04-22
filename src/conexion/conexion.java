@@ -7,18 +7,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import vistas.vendedorTabla;
 
 import vistas.ventanaVendedor;
 import vistas.ventanaGerente;
+
+
 
 public class conexion {
 public static Connection con;
 
 public void conectar(){ 
         try {
+            
             con=DriverManager.getConnection("jdbc:mysql://localhost:3306/testcelaju","root","root1234");
             if (con!=null){
             System.out.println("Conectado a la base de datos");
+            int prueba  = con.getNetworkTimeout();
+            System.out.println("tiempo de conexion" +prueba);
             }
         } catch (SQLException e) {
             System.out.println("Sin Conexion a base de datos");
@@ -47,7 +53,10 @@ public void conectar(){
             if("2".equals(rs.getString(4))){
                 System.out.println("usuario es vendedor");
                 ventanaVendedor vendedor = new ventanaVendedor();
+                vendedorTabla tabla = new vendedorTabla();
+                tabla.setVisible(true);
                 vendedor.setVisible(true);
+               
             }
          }else{
             JOptionPane.showMessageDialog(null,"Datos Incorrectos") ;
@@ -65,13 +74,13 @@ public void conectar(){
         System.out.println("cliente agregado");        
     }
     
-     public void ingresarproducto(String Clave, String Descripcion, String Linea, int Existencia, int Precio, int Bodega_idBodega ) throws SQLException{
+     public void ingresarproducto(String Clave, String Descripcion, String Linea, int Existencia, double Precio, int Bodega_idBodega ) throws SQLException{
         PreparedStatement ps1 = con.prepareStatement("INSERT INTO producto(Clave, Descripcion, Linea, Existencia, Precio, Bodega_idBodega) VALUES(?,?,?,?,?,?)");
         ps1.setString(1, Clave);
         ps1.setString(2, Descripcion);
         ps1.setString(3, Linea);
         ps1.setInt(4, Existencia);
-        ps1.setInt(5, Precio);
+        ps1.setDouble(5, Precio);
         ps1.setInt(6, Bodega_idBodega);
         ps1.executeUpdate();
         System.out.println("Producto Agregado");        
@@ -84,11 +93,20 @@ public void conectar(){
          System.out.println("Producto Eliminado");
          
      }
+     
+     public void eliminarcliente(String Nombre) throws SQLException{
+         PreparedStatement ps2 = con.prepareStatement("DELETE  FROM cliente WHERE Nombre=?");
+         ps2.setString(1, Nombre);
+         ps2.executeQuery();
+         System.out.println("Cliente Eliminado");
+         
+     }
     
-    public void cargartabla(){
+    public DefaultTableModel cargartabla(){
         DefaultTableModel modelo = new DefaultTableModel();
         String [] titulo = {"Clave","Nombre","Nit","Dirección","Tipo de Cliente"};
         modelo.addColumn("prueba");
+        return modelo;
         
          
     }
