@@ -3,6 +3,7 @@ package vistas;
 import com.mysql.cj.xdevapi.Statement;
 import conexion.conexion;
 import static conexion.conexion.con;
+import static java.awt.image.ImageObserver.HEIGHT;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
 public class ventanaVendedor extends javax.swing.JFrame {
 
     conexion cn = new conexion();
+    
+    
    
    
     
@@ -26,6 +30,8 @@ public class ventanaVendedor extends javax.swing.JFrame {
         
         initComponents();
         setLocationRelativeTo(null);
+        cn.conectar();
+        cargartabla();
     }
 
     
@@ -53,7 +59,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
         btlimpiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaclientes = new javax.swing.JTable();
-        cargartabla = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,6 +76,8 @@ public class ventanaVendedor extends javax.swing.JFrame {
         jLabel6.setText("Tipo Cliente");
 
         jLabel7.setText("Clave");
+
+        txtclave.setEditable(false);
 
         cbxtipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione\t", "Mayorista\t", "Final", " " }));
 
@@ -125,13 +132,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaclientes);
 
-        cargartabla.setText("Cargar Tabla");
-        cargartabla.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cargartablaActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -162,12 +162,9 @@ public class ventanaVendedor extends javax.swing.JFrame {
                             .addComponent(txtnit))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btagregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btagregar, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                             .addComponent(bteliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btlimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cargartabla, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(btlimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
                 .addContainerGap())
@@ -180,8 +177,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(txtclave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cargartabla))
+                            .addComponent(txtclave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -190,17 +186,18 @@ public class ventanaVendedor extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bteliminar))
+                            .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(txttelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btlimpiar))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5)
+                                .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(bteliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -251,11 +248,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cargartablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargartablaActionPerformed
-        // Cargando Tabla:
-        cargartabla();
-    }//GEN-LAST:event_cargartablaActionPerformed
-
     private void tablaclientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaclientesMouseClicked
         //evento que al hacer click carga los datos a la tabla
         DefaultTableModel modelo = (DefaultTableModel) tablaclientes.getModel();
@@ -273,9 +265,10 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
     private void bteliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteliminarActionPerformed
         String Nombre = txtnombre.getText();
-        System.out.println("eliminar nombre "+ Nombre);
+        String clave = txtclave.getText();
+        System.out.println("eliminar clave "+ clave);
         try {
-            cn.eliminarcliente(Nombre);
+            cn.eliminarcliente(clave);
         } catch (SQLException ex) {
             Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -283,17 +276,27 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
     private void btagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btagregarActionPerformed
         // TODO add your handling code here:
+        
 
         String Nombre = txtnombre.getText();
         String Nit = txtnit.getText();
         String Telefono = txttelefono.getText();
         String Direccion = txtdireccion.getText();
         String Tipo =  cbxtipo.getSelectedItem().toString();
-        try {
-            cn.agregarcliente(Nombre, Nit, Telefono, Direccion, Tipo);
-        } catch (SQLException ex) {
-            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        if (("".equals(Nombre)) || ("".equals(Nit)) || ("".equals(Telefono)) || ("".equals(Direccion))   )  {
+            JOptionPane.showMessageDialog(null, "Debe Llenar todos los Campos", "Faltan Datos", HEIGHT);
         }
+        else{
+            try {
+                cn.agregarcliente(Nombre, Nit, Telefono, Direccion, Tipo);
+                JOptionPane.showMessageDialog(null, "Cliente Agregado");
+                cargartabla();
+            } catch (Exception e) {
+            }
+            
+        }
+        
+    
     }//GEN-LAST:event_btagregarActionPerformed
 
         
@@ -366,7 +369,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
     private javax.swing.JButton btagregar;
     private javax.swing.JButton bteliminar;
     private javax.swing.JButton btlimpiar;
-    private javax.swing.JButton cargartabla;
     private javax.swing.JComboBox<String> cbxtipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
