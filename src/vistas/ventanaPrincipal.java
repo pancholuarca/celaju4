@@ -31,6 +31,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         btingresar = new javax.swing.JButton();
         btsalir = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Celaju Login");
@@ -65,10 +66,17 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("vendedor");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("gerente");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -99,7 +107,10 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                         .addGap(56, 56, 56))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton2))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btingresar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -126,7 +137,9 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     .addComponent(btingresar)
                     .addComponent(btsalir))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
 
@@ -158,7 +171,14 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         ventanaVendedor v = new ventanaVendedor();
         v.setVisible(true);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        ventanaGerente v = new ventanaGerente();
+        v.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
   
     public static void main(String args[]) {
@@ -197,6 +217,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btingresar;
     private javax.swing.JButton btsalir;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
