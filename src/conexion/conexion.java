@@ -123,6 +123,37 @@ public void conectar(){
          
     }
     
+    public void agregarfactura(String idcliente, String idvendedor, String fecha, String total) throws SQLException{
+        PreparedStatement ps = con.prepareStatement("INSERT INTO factura (Fecha, Total, Cliente_idCliente, Usuario_idUsuario)VALUES (?,?,?,?)");
+        ps.setString(1, fecha);
+        ps.setString(2, total);
+        ps.setString(3, idcliente);
+        ps.setString(4, idvendedor);
+        ps.executeUpdate();
+        System.out.println("factura ingresada");
+    }
+    
+    public String numerofactura() throws SQLException{
+        String factura="0";
+        int contador;
+        //PreparedStatement ps = con.prepareStatement("SELECT MAX(No_Factura) FROM factura");
+        PreparedStatement ps = con.prepareStatement("SELECT count(*) FROM factura");
+
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            factura = rs.getString(1);
+        }
+        contador = Integer.parseInt(factura)+1;
+        factura  = contador+"";
+        System.out.println("factura  "+factura);
+        return factura;
+    }
+    
+    public void agregardetalle(String cantidad, String precio, String Producto_idProducto, String Factura_No_Factura){
+        
+    }
+    
+    
     
     
     
