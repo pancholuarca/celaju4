@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import vistas.vendedorTabla;
-
 import vistas.ventanaVendedor;
 import vistas.ventanaGerente;
 
@@ -24,7 +22,7 @@ public void conectar(){
             if (con!=null){
             System.out.println("Conectado a la base de datos");
             int prueba  = con.getNetworkTimeout();
-            System.out.println("tiempo de conexion" +prueba);
+            System.out.println("tiempo de conexion: " +prueba);
             }
         } catch (SQLException e) {
             System.out.println("Sin Conexion a base de datos");
@@ -53,8 +51,6 @@ public void conectar(){
             if("2".equals(rs.getString(4))){
                 System.out.println("usuario es vendedor");
                 ventanaVendedor vendedor = new ventanaVendedor();
-                vendedorTabla tabla = new vendedorTabla();
-                tabla.setVisible(true);
                 vendedor.setVisible(true);
                
             }
@@ -64,6 +60,7 @@ public void conectar(){
     }
     
     public void agregarcliente(String Nombre, String Nit, String Telefono, String Direccion, String Tipo) throws SQLException{
+        
         PreparedStatement ps = con.prepareStatement("INSERT INTO cliente(Nombre, Nit, Telefono, Direccion, Tipo) VALUES(?,?,?,?,?)");
         ps.setString(1, Nombre);
         ps.setString(2, Nit);
@@ -94,12 +91,28 @@ public void conectar(){
          
      }
      
-     public void eliminarcliente(String Nombre) throws SQLException{
-         PreparedStatement ps2 = con.prepareStatement("DELETE  FROM cliente WHERE Nombre=?");
-         ps2.setString(1, Nombre);
-         ps2.executeQuery();
-         System.out.println("Cliente Eliminado");
+     public String buscarcliente(String id) throws SQLException{
+         String nombre = null;
+         String sql = "select * from cliente where idCliente =?"; 
+         try {
+             PreparedStatement ps = con.prepareStatement(sql);
+             ps.setString(1, id);
+             ResultSet rs = ps.executeQuery(); 
+             nombre = rs.getString(1);
+             System.out.println("en teoria ya encontre algo"+nombre);
+             
+         } catch (Exception e) {
+         }
+         return nombre;
          
+     }
+     
+     public void eliminarcliente(String prueba) throws SQLException{
+         //DELETE FROM `cliente` WHERE idCliente = 10
+         PreparedStatement ps2 = con.prepareStatement("DELETE FROM cliente WHERE idCliente=?");
+         ps2.setString(1, prueba );
+         ps2.executeUpdate();
+         System.out.println("Cliente Eliminado");
      }
     
     public DefaultTableModel cargartabla(){
@@ -107,7 +120,6 @@ public void conectar(){
         String [] titulo = {"Clave","Nombre","Nit","Dirección","Tipo de Cliente"};
         modelo.addColumn("prueba");
         return modelo;
-        
          
     }
     
