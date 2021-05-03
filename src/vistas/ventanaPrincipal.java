@@ -7,6 +7,8 @@ import static java.awt.image.ImageObserver.HEIGHT;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -169,8 +171,14 @@ public class ventanaPrincipal extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        ventanaVendedor v = new ventanaVendedor();
-        v.setVisible(true);
+        ventanaVendedor v;
+        try {
+            v = new ventanaVendedor();
+            v.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
