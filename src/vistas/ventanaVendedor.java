@@ -103,6 +103,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
         lblidcliente = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         txtfecha = new javax.swing.JLabel();
+        txtidproducto = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -246,7 +247,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(cbxtipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(302, Short.MAX_VALUE))
+                .addContainerGap(303, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Clientes", jPanel1);
@@ -341,7 +342,8 @@ public class ventanaVendedor extends javax.swing.JFrame {
                                     .addComponent(jLabel15)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel10)
-                                        .addComponent(jLabel13)))
+                                        .addComponent(jLabel13))
+                                    .addComponent(txtidproducto))
                                 .addGap(36, 36, 36)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -398,7 +400,9 @@ public class ventanaVendedor extends javax.swing.JFrame {
                     .addComponent(txtfnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(txtftipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtidproducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(cbproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -412,7 +416,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
                     .addComponent(jLabel14)
                     .addComponent(sproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btfagregar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -503,28 +507,33 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
     private void btfagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfagregarActionPerformed
         
-        Double precio = Double.parseDouble(txtprecio.getText());
-        String descripcion = (String) cbproducto.getSelectedItem();
-        int cantidad = (int) sproducto.getValue();
-        Double total = precio * cantidad;
-        modelo=(DefaultTableModel)tabladetalle.getModel();
-        item  = item+1;
-        //System.out.println("D "+descripcion +" C "+cantidad+" Total "+total);
-        ArrayList lista = new ArrayList();
-        lista.add(item);
-        lista.add(descripcion);
-        lista.add(cantidad);
-        lista.add(total);
-        Object[] ob = new Object[4];        
-        ob[0]=lista.get(0);
-        ob[1]=lista.get(1);
-        ob[2]=lista.get(2);
-        ob[3]=lista.get(3);
-        modelo.addRow(ob);
-        tabladetalle.setModel(modelo);
-         
-       
-        //total(); 
+        try {
+            Double precio = Double.parseDouble(txtprecio.getText());
+            String descripcion = (String) cbproducto.getSelectedItem();
+            int cantidad = (int) sproducto.getValue();
+            Double total = precio * cantidad;
+            modelo=(DefaultTableModel)tabladetalle.getModel();
+            item  = item+1;
+            //System.out.println("D "+descripcion +" C "+cantidad+" Total "+total);
+            ArrayList lista = new ArrayList();
+            lista.add(txtidproducto.getText());
+            lista.add(descripcion);
+            lista.add(cantidad);
+            lista.add(total);
+            Object[] ob = new Object[4];
+            ob[0]=lista.get(0);
+            ob[1]=lista.get(1);
+            ob[2]=lista.get(2);
+            ob[3]=lista.get(3);
+            modelo.addRow(ob);
+            tabladetalle.setModel(modelo);
+            String nfactura = cn.numerofactura();
+            
+            
+            //total(); 
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btfagregarActionPerformed
 
     private double total(){
@@ -556,6 +565,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
                 }
                 //cbproducto.addItem(rs.getObject(3).toString());
                 txtprecio.setText(rs.getObject(6).toString());
+                txtidproducto.setText(rs.getString(1));
                 int spin =(int) rs.getObject(5);
                 nm.setMaximum(spin);
                 nm.setValue(1);
@@ -595,7 +605,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
                 lblidcliente.setText(rs.getObject(1).toString());
                 idCliente = rs.getObject(1).toString();
                 idVendedor = "1";
-                fecha="24-12-03";
                 cn.numerofactura();
                 
                 
@@ -615,16 +624,32 @@ public class ventanaVendedor extends javax.swing.JFrame {
         
         try {
             cn.agregarfactura(idCliente, idVendedor, fecha, t);
+           //guardardetalle();
                        
         } catch (SQLException ex) {
             Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        guardardetalle();
+        
         
         
     }//GEN-LAST:event_btcalcularActionPerformed
 
-    public void guardardetalle(){
+    public void guardardetalle() throws SQLException{
+        
+        for(int i=0; i<tabladetalle.getRowCount(); i++)
+        {
+            String Cantidad = tabladetalle.getValueAt(i, 3).toString();
+            System.out.println("cnatidad" + cantidad);
+            String Precio = tabladetalle.getValueAt(i, 4).toString();
+            System.out.println("precio" + precio);
+            String idproducto = txtidproducto.getText();
+            System.out.println("id producto" + idproducto);
+            String factura = cn.numerofactura();
+            cn.agregardetalle(Cantidad, Precio, idproducto, factura);
+            
+            
+            
+        }
         
     }
     
@@ -813,6 +838,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
     private javax.swing.JLabel txtfecha;
     private javax.swing.JTextField txtfnit;
     private javax.swing.JTextField txtftipo;
+    private javax.swing.JLabel txtidproducto;
     private javax.swing.JTextField txtnit;
     private javax.swing.JTextField txtnombre;
     private javax.swing.JTextField txtprecio;

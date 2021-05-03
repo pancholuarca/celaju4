@@ -150,7 +150,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="302" max="32767" attributes="0"/>
+                      <EmptySpace pref="303" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -310,6 +310,7 @@
                                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                           </Group>
+                                          <Component id="txtidproducto" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
@@ -386,7 +387,9 @@
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtftipo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtidproducto" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbproducto" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -402,7 +405,7 @@
                           <Component id="sproducto" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btfagregar" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="153" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -544,6 +547,8 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="txtfecha">
+            </Component>
+            <Component class="javax.swing.JLabel" name="txtidproducto">
             </Component>
           </SubComponents>
         </Container>
