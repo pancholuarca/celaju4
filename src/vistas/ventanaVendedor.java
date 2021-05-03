@@ -9,10 +9,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -20,6 +22,14 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
     conexion cn = new conexion();
     DefaultTableModel modelo  = new DefaultTableModel(); 
+    int item =0;
+    double total=0;
+    double precio=0;
+    int  cantidad=0;
+    String idCliente;
+    String idVendedor;
+    String fecha;
+    String ftotal;
     
     public ventanaVendedor() {
         
@@ -28,6 +38,12 @@ public class ventanaVendedor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         cn.conectar();
         cargartabla();
+        llenarcomboproducto();
+        llenarcombocliente();
+        tabladetalle();
+        DefaultTableModel detalle = new DefaultTableModel();
+        
+        
     }
 
     
@@ -57,21 +73,26 @@ public class ventanaVendedor extends javax.swing.JFrame {
         tablaclientes = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        ftxtcliente = new javax.swing.JTextField();
-        ftxtclave = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabladetalle = new javax.swing.JTable();
         jLabel13 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jButton1 = new javax.swing.JButton();
-        fbtbuscarproducto = new javax.swing.JButton();
-        fbtbuscarcliente = new javax.swing.JButton();
+        sproducto = new javax.swing.JSpinner();
+        btfagregar = new javax.swing.JButton();
+        cbproducto = new javax.swing.JComboBox<>();
+        cbcliente = new javax.swing.JComboBox<>();
+        txtprecio = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txtfnit = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtftipo = new javax.swing.JTextField();
+        lbcantidad = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        btcalcular = new javax.swing.JButton();
+        gtotal = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        lblidcliente = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -222,17 +243,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
         jLabel8.setText("Facturar");
 
-        jLabel9.setText("Clave Cliente");
-
         jLabel10.setText("Cliente");
-
-        ftxtclave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ftxtclaveActionPerformed(evt);
-            }
-        });
-
-        jLabel11.setText("Clave Producto");
 
         jLabel12.setText("Producto");
 
@@ -249,25 +260,52 @@ public class ventanaVendedor extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tabladetalle);
 
-        jLabel13.setText("Cantidad");
+        jLabel13.setText("Precio");
 
-        jButton1.setText("Agregar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        sproducto.setModel(new javax.swing.SpinnerNumberModel(1, 0, 10, 1));
+
+        btfagregar.setText("Agregar");
+        btfagregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btfagregarActionPerformed(evt);
             }
         });
 
-        fbtbuscarproducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistas/lupa.png"))); // NOI18N
-        fbtbuscarproducto.setActionCommand("fbtbuscar");
-
-        fbtbuscarcliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistas/lupa.png"))); // NOI18N
-        fbtbuscarcliente.setActionCommand("fbtbuscar");
-        fbtbuscarcliente.addActionListener(new java.awt.event.ActionListener() {
+        cbproducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fbtbuscarclienteActionPerformed(evt);
+                cbproductoActionPerformed(evt);
             }
         });
+
+        cbcliente.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                cbclienteAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        cbcliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbclienteActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("NIT");
+
+        jLabel11.setText("Tipo Cliente");
+
+        jLabel14.setText("Cantidad");
+
+        btcalcular.setText("Validar Factura");
+        btcalcular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcalcularActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("idCliente");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -277,74 +315,90 @@ public class ventanaVendedor extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(4, 4, 4))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(22, 22, 22)
-                                        .addComponent(ftxtclave, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel11)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel13)
-                                                .addGap(45, 45, 45)))
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField2)
-                                            .addComponent(jSpinner1))))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(fbtbuscarproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fbtbuscarcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(24, 24, 24)))
+                        .addComponent(btcalcular)
+                        .addGap(39, 39, 39)
+                        .addComponent(gtotal))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(jLabel12)
+                                .addGap(35, 35, 35))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jLabel10))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(ftxtcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                    .addComponent(jTextField1)))
-                            .addComponent(jButton1)))
+                                    .addComponent(jLabel15)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel13)))
+                                .addGap(36, 36, 36)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lblidcliente)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel8)
+                                .addGap(4, 4, 4))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(cbcliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbproducto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(txtprecio, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel14)
+                                    .addGap(32, 32, 32)
+                                    .addComponent(sproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtfnit, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtftipo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbcantidad)
+                            .addComponent(btfagregar)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(460, Short.MAX_VALUE))
+                .addContainerGap(340, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9)
-                        .addComponent(jLabel10)
-                        .addComponent(ftxtcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ftxtclave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(fbtbuscarcliente))
-                .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel13)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)))
-                    .addComponent(fbtbuscarproducto))
+                            .addComponent(jLabel15)
+                            .addComponent(lblidcliente))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(cbcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtfnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtftipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(cbproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txtprecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbcantidad)
+                    .addComponent(jLabel14)
+                    .addComponent(sproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btfagregar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btcalcular)
+                    .addComponent(gtotal))
+                .addGap(184, 184, 184))
         );
 
         jTabbedPane1.addTab("Facturación", jPanel2);
@@ -427,28 +481,179 @@ public class ventanaVendedor extends javax.swing.JFrame {
     
     }//GEN-LAST:event_btagregarActionPerformed
 
-    private void ftxtclaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftxtclaveActionPerformed
+    private void btfagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfagregarActionPerformed
+        
+        Double precio = Double.parseDouble(txtprecio.getText());
+        String descripcion = (String) cbproducto.getSelectedItem();
+        int cantidad = (int) sproducto.getValue();
+        Double total = precio * cantidad;
+        modelo=(DefaultTableModel)tabladetalle.getModel();
+        item  = item+1;
+        //System.out.println("D "+descripcion +" C "+cantidad+" Total "+total);
+        ArrayList lista = new ArrayList();
+        lista.add(item);
+        lista.add(descripcion);
+        lista.add(cantidad);
+        lista.add(total);
+        Object[] ob = new Object[4];        
+        ob[0]=lista.get(0);
+        ob[1]=lista.get(1);
+        ob[2]=lista.get(2);
+        ob[3]=lista.get(3);
+        modelo.addRow(ob);
+        tabladetalle.setModel(modelo);
+         
+       
+        //total(); 
+    }//GEN-LAST:event_btfagregarActionPerformed
+
+    private double total(){
+        for(int i=0; i<tabladetalle.getRowCount();i++)
+        {
+            cantidad = Integer.parseInt(tabladetalle.getValueAt(i, 2).toString());
+            Double t= Double.parseDouble(tabladetalle.getValueAt(i, 3).toString());
+            total = total + t;
+            
+        }
+                  
+        return total;
+    }
+    private void cbproductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbproductoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ftxtclaveActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        agregarProducto();
-        int contador = 0;
-        modelo = (DefaultTableModel)tabladetalle.getModel();  
-        contador = contador +1;
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void fbtbuscarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fbtbuscarclienteActionPerformed
+        String examinar =cbproducto.getSelectedItem().toString();
+        SpinnerNumberModel nm = new SpinnerNumberModel();
         try {
-            // TODO add your handling code here:
-            String id = ftxtclave.getText();
-            buscarcliente(id);
+            PreparedStatement ps = con.prepareStatement("select * from producto where descripcion =?");
+            ps.setString(1, examinar);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Object [] fila = new Object[6]; // Hay 6 columnas en la tabla
+                for (int i=0;i<6;i++)
+                {    
+                fila[i] = rs.getObject(i+1); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
+                
+                }
+                //cbproducto.addItem(rs.getObject(3).toString());
+                txtprecio.setText(rs.getObject(6).toString());
+                int spin =(int) rs.getObject(5);
+                nm.setMaximum(spin);
+                nm.setValue(1);
+                sproducto.setModel(nm);
+                
+             
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_fbtbuscarclienteActionPerformed
+        
+    }//GEN-LAST:event_cbproductoActionPerformed
 
-    public void agregarProducto(){
+    private void cbclienteAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cbclienteAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbclienteAncestorAdded
+
+    private void cbclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbclienteActionPerformed
+        // TODO add your handling code here:
+        String examinar =cbcliente.getSelectedItem().toString();
+        try {
+            PreparedStatement ps = con.prepareStatement("select * from cliente where nombre =?");
+            ps.setString(1, examinar);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Object [] fila = new Object[6]; // Hay 6 columnas en la tabla
+                for (int i=0;i<6;i++)
+                {    
+                fila[i] = rs.getObject(i+1); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
+                
+                }
+                //cbproducto.addItem(rs.getObject(3).toString());
+                txtfnit.setText(rs.getObject(3).toString());
+                txtftipo.setText(rs.getObject(6).toString());
+                lblidcliente.setText(rs.getObject(1).toString());
+                idCliente = rs.getObject(1).toString();
+                idVendedor = "1";
+                fecha="24-12-03";
+                cn.numerofactura();
+                
+                
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_cbclienteActionPerformed
+
+    private void btcalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcalcularActionPerformed
+        //total();
+        String t = String.valueOf(total());
+        gtotal.setText(t);
+        try {
+            cn.agregarfactura(idCliente, idVendedor, fecha, t);
+                       
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btcalcularActionPerformed
+
+      
+    public void llenarcomboproducto(){
+        cn.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("select * from producto");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Object [] fila = new Object[6]; // Hay 6 columnas en la tabla
+                for (int i=0;i<6;i++)
+                {    
+                fila[i] = rs.getObject(i+1); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
+                
+                }
+                cbproducto.addItem(rs.getObject(3).toString());
+                //txtprecio.setText(rs.getObject(6).toString());
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void llenarcombocliente(){
+        cn.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("select * from cliente");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Object [] fila = new Object[6]; // Hay 6 columnas en la tabla
+                for (int i=0;i<6;i++)
+                {    
+                fila[i] = rs.getObject(i+1); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
+                
+                }
+                cbcliente.addItem(rs.getObject(2).toString());
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaVendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void buscarProducto(String id) throws SQLException{
+        cn.conectar();
+        PreparedStatement ps = con.prepareStatement("select * from producto where idProducto=?");
+        ps.setString(1, id);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+            {
+                Object [] fila = new Object[6]; 
+                fila[1] = rs.getObject(3); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
+                //System.out.println("cliente "+fila[1]);
+            }
     
     }
     
@@ -462,10 +667,16 @@ public class ventanaVendedor extends javax.swing.JFrame {
             {
                 Object [] fila = new Object[6]; 
                 fila[1] = rs.getObject(2); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
-                ftxtcliente.setText((String) fila[1]);
-                System.out.println("cliente "+fila[1]);
             }
+    }
     
+    public void tabladetalle(){
+       DefaultTableModel modelo = new DefaultTableModel();
+       modelo.addColumn("Item");
+       modelo.addColumn("Descripcion");
+       modelo.addColumn("Cantidad");
+       modelo.addColumn("Total");
+       tabladetalle.setModel(modelo);
     }
     
     public void cargartabla(){
@@ -535,19 +746,21 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btagregar;
+    private javax.swing.JButton btcalcular;
     private javax.swing.JButton bteliminar;
+    private javax.swing.JButton btfagregar;
     private javax.swing.JButton btlimpiar;
+    private javax.swing.JComboBox<String> cbcliente;
+    private javax.swing.JComboBox<String> cbproducto;
     private javax.swing.JComboBox<String> cbxtipo;
-    private javax.swing.JButton fbtbuscarcliente;
-    private javax.swing.JButton fbtbuscarproducto;
-    private javax.swing.JTextField ftxtclave;
-    private javax.swing.JTextField ftxtcliente;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel gtotal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -560,16 +773,19 @@ public class ventanaVendedor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lbcantidad;
+    private javax.swing.JLabel lblidcliente;
+    private javax.swing.JSpinner sproducto;
     private javax.swing.JTable tablaclientes;
     private javax.swing.JTable tabladetalle;
     private javax.swing.JTextField txtclave;
     private javax.swing.JTextField txtdireccion;
+    private javax.swing.JTextField txtfnit;
+    private javax.swing.JTextField txtftipo;
     private javax.swing.JTextField txtnit;
     private javax.swing.JTextField txtnombre;
+    private javax.swing.JTextField txtprecio;
     private javax.swing.JTextField txttelefono;
     // End of variables declaration//GEN-END:variables
 }
