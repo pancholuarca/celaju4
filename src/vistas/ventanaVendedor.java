@@ -32,9 +32,11 @@ public class ventanaVendedor extends javax.swing.JFrame {
     String idVendedor;
     String fecha;
     String ftotal;
+    String nfactura;
+    int productostk=0;
+    int op = 0;
     
-    
-    public ventanaVendedor() {
+    public ventanaVendedor() throws SQLException {
         
         
         initComponents();
@@ -49,6 +51,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
         txtfecha.setText(""+calendario.get(Calendar.YEAR)+"-"+(calendario.get(Calendar.MONTH)+1)+"-"+calendario.get(Calendar.DAY_OF_MONTH));
         fecha= txtfecha.getText();
         System.out.println("fecha "+fecha);
+        nfactura = cn.numerofactura();
     
         
         
@@ -310,7 +313,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
 
         jLabel14.setText("Cantidad");
 
-        btcalcular.setText("Validar Factura");
+        btcalcular.setText("Ingresar Factura");
         btcalcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcalcularActionPerformed(evt);
@@ -538,6 +541,14 @@ public class ventanaVendedor extends javax.swing.JFrame {
             modelo.addRow(ob);
             tabladetalle.setModel(modelo);
             String nfactura = cn.numerofactura();
+            String id = txtidproducto.getText();
+            int n = cn.diponibleinventario(txtidproducto.getText());
+            //System.out.println("inventario "+n +"voy a restar "+cantidad);
+            op = n - cantidad;
+            String df= op+"";
+            cn.actualizarproducto(id, df);
+            //cn.agregardetalle("4", sproducto.getValue().toString(), txtprecio.getText(), txtidproducto.getText(), nfactura);
+            
             
             
             //total(); 
@@ -577,6 +588,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
                 txtprecio.setText(rs.getObject(6).toString());
                 txtidproducto.setText(rs.getString(1));
                 int spin =(int) rs.getObject(5);
+                productostk=spin;
                 nm.setMaximum(spin);
                 nm.setValue(1);
                 sproducto.setModel(nm);
@@ -802,7 +814,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                new ventanaVendedor().setVisible(true);
+                //new ventanaVendedor().setVisible(true);
             }
         });
     }
