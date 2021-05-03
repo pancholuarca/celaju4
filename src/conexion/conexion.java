@@ -83,6 +83,27 @@ public void conectar(){
         System.out.println("Producto Agregado");        
     }
      
+    public void actualizarcliente(String idCliente, String Nombre, String Nit, String Telefono, String Direccion, String Tipo) throws SQLException{
+        String  sql="UPDATE cliente SET Nombre = ?, Nit = ?, Telefono = ?, Direccion = ?, Tipo = ?  WHERE idCliente =?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, Nombre);
+        ps.setString(2, Nit);
+        ps.setString(3, Telefono);
+        ps.setString(4, Direccion);
+        ps.setString(5, Tipo);
+        ps.setString(6, idCliente);
+    }
+     
+     public void actualizarproducto(String id, String op) throws SQLException{
+         String sql="UPDATE producto SET Existencia = ? WHERE idProducto =?";
+         //UPDATE `producto` SET `Existencia` = '5' WHERE `producto`.`idProducto` = 2;
+         PreparedStatement ps = con.prepareStatement(sql);
+         ps.setString(1, op);
+         ps.setString(2, id);
+         ps.executeUpdate();
+         System.out.println("actualizada la infor");
+     }
+     
      public void eliminarproducto(String Clave) throws SQLException{
          PreparedStatement ps = con.prepareStatement("DELETE  FROM producto WHERE Clave=?");
          ps.setString(1, Clave);
@@ -149,21 +170,28 @@ public void conectar(){
         return factura;
     }
     
-    public void agregardetalle(String cantidad, String precio, String Producto_idProducto, String Factura_No_Factura) throws SQLException{
-        PreparedStatement ps = con.prepareStatement("INSERT INTO producto_has_factura (Cantidad, Precio, Producto_idProducto, Factura_No_Factura)VALUES (?,?,?,?)");
-        ps.setString(1, cantidad);
-        ps.setString(2, precio);
-        ps.setString(3, Producto_idProducto);
-        ps.setString(4, Factura_No_Factura);
+    public int diponibleinventario(String descripcion) throws SQLException{
+        int detalle=0;
+        PreparedStatement ps = con.prepareStatement("SELECT Existencia FROM producto WHERE idProducto = ?");
+        ps.setString(1, descripcion);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            detalle = Integer.parseInt(rs.getString(1));
+        }
+        //System.out.println("exsitencia "+detalle);
+        return detalle;
+    }
+    
+    public void agregardetalle(String iddetalle, String cantidad, String precio, String Producto_idProducto, String Factura_No_Factura) throws SQLException{
+        //SQL="INSERT INTO `producto_has_factura` (`idDetalle`, `Cantidad`, `Precio`, `Producto_idProducto`, `Factura_No_Factura`) VALUES ('', '3', '125', '17', '8');"
+        PreparedStatement ps = con.prepareStatement("INSERT INTO producto_has_factura (idDetalle, Cantidad, Precio, Producto_idProducto, Factura_No_Factura)VALUES (?,?,?,?,?)");
+        ps.setString(1, iddetalle); 
+        ps.setString(2, cantidad);
+        ps.setString(3, precio);
+        ps.setString(4, Producto_idProducto);
+        ps.setString(5, Factura_No_Factura);
         ps.executeUpdate();
         System.out.println("detalle ingresado");
         
     }
-    
-    
-    
-    
-    
-    
-    
 }
