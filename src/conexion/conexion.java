@@ -149,7 +149,14 @@ public void conectar(){
         return factura;
     }
     
-    public void agregardetalle(String cantidad, String precio, String Producto_idProducto, String Factura_No_Factura){
+    public void agregardetalle(String cantidad, String precio, String Producto_idProducto, String Factura_No_Factura) throws SQLException{
+        PreparedStatement ps = con.prepareStatement("INSERT INTO producto_has_factura (Cantidad, Precio, Producto_idProducto, Factura_No_Factura)VALUES (?,?,?,?)");
+        ps.setString(1, cantidad);
+        ps.setString(2, precio);
+        ps.setString(3, Producto_idProducto);
+        ps.setString(4, Factura_No_Factura);
+        ps.executeUpdate();
+        System.out.println("detalle ingresado");
         
     }
     
