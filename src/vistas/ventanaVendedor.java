@@ -104,6 +104,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         txtfecha = new javax.swing.JLabel();
         txtidproducto = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -316,9 +317,14 @@ public class ventanaVendedor extends javax.swing.JFrame {
             }
         });
 
+        gtotal.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+
         jLabel15.setText("idCliente");
 
         jLabel16.setText("Fecha");
+
+        jLabel17.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel17.setText("Total:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -327,10 +333,6 @@ public class ventanaVendedor extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btcalcular)
-                        .addGap(39, 39, 39)
-                        .addComponent(gtotal))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -378,7 +380,14 @@ public class ventanaVendedor extends javax.swing.JFrame {
                                 .addComponent(jLabel16)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtfecha))))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(btcalcular)
+                            .addGap(81, 81, 81)
+                            .addComponent(jLabel17)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(gtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(340, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -416,13 +425,14 @@ public class ventanaVendedor extends javax.swing.JFrame {
                     .addComponent(jLabel14)
                     .addComponent(sproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btfagregar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btcalcular)
-                    .addComponent(gtotal))
-                .addGap(184, 184, 184))
+                    .addComponent(gtotal)
+                    .addComponent(jLabel17)
+                    .addComponent(btcalcular))
+                .addGap(194, 194, 194))
         );
 
         jTabbedPane1.addTab("Facturación", jPanel2);
@@ -645,7 +655,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
             String idproducto = txtidproducto.getText();
             System.out.println("id producto" + idproducto);
             String factura = cn.numerofactura();
-            cn.agregardetalle(Cantidad, Precio, idproducto, factura);
+            
             
             
             
@@ -815,6 +825,7 @@ public class ventanaVendedor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
